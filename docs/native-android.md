@@ -57,7 +57,7 @@ android/
 │   ├── VehicleLoader       Requête + enregistrement + repli sur le cache → VehicleStatus ; cached() : même résultat sans réseau
 │   ├── TempoLoader         Requête RTE + cache `tempo` + repli sur le cache
 │   ├── Models              UserAccount (carFor), UserCar, CarMaker, AppPreferences
-│   ├── Formatting          « 14:05 », « 07/10 14:05 », « 2h05 », « 300 km » / « 186 mi », prix Tempo, libellés des états de charge
+│   ├── Formatting          heure et date au format de l'appareil (« 14:05 », « 07/10 14:05 » / « 7.10. 14:05 »), « 2h05 », « 300 km » / « 186 mi », prix Tempo, libellés des états de charge
 │   └── res/values*/        Textes du widget partagés (états de charge, erreurs), 19 langues
 └── app/
     ├── KelecMainWIdget     Receiver du widget batterie (CarStatusWidget)

@@ -198,7 +198,7 @@ private fun BatteryCard(
                         modifier = Modifier.size(14.dp),
                         tint = WearColors.secondary,
                     )
-                    Text(text = Formatting.localTime(endTime), fontSize = 13.sp, color = WearColors.secondary)
+                    Text(text = Formatting.localTime(context, endTime), fontSize = 13.sp, color = WearColors.secondary)
                 }
             }
         }

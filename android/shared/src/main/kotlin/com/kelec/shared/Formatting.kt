@@ -1,11 +1,14 @@
 package com.kelec.shared
 
 import android.content.Context
+import android.text.format.DateFormat
 import com.kelec.carapi.ChargingState
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 object Formatting {
@@ -17,18 +20,30 @@ object Formatting {
         null
     }
 
-    /** « 14:05 » dans le fuseau du téléphone. */
-    fun localTime(dateTime: ZonedDateTime): String =
-        dateTime.withZoneSameInstant(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT))
+    /** Heure dans le fuseau du téléphone, au format de l'appareil : « 14:05 », ou « 2:05 PM » si le réglage est sur 12 h. */
+    fun localTime(context: Context, dateTime: ZonedDateTime): String =
+        localized(context, if (DateFormat.is24HourFormat(context)) "Hm" else "hm", dateTime)
 
-    /** Heure de la dernière mise à jour, précédée de la date (« 07/10 14:05 ») si ce n'est pas aujourd'hui. */
-    fun lastRefresh(dateTime: ZonedDateTime, today: LocalDate = LocalDate.now()): String {
+    /** Heure de la dernière mise à jour, précédée de la date (« 07/10 14:05 », « 7.10. 14:05 »…) si ce n'est pas aujourd'hui. */
+    fun lastRefresh(context: Context, dateTime: ZonedDateTime, today: LocalDate = LocalDate.now()): String {
         val local = dateTime.withZoneSameInstant(ZoneId.systemDefault())
-        return if (local.toLocalDate() == today) localTime(local) else "${dayMonth(local.toLocalDate())} ${localTime(local)}"
+        return if (local.toLocalDate() == today) localTime(context, local)
+        else "${dayMonth(context, local.toLocalDate())} ${localTime(context, local)}"
     }
 
-    /** « 08/10 » */
-    fun dayMonth(date: LocalDate): String = date.format(DateTimeFormatter.ofPattern("dd/MM", Locale.ROOT))
+    /** Jour et mois, sans l'année, dans l'ordre et avec les séparateurs de la langue : « 08/10 » (fr), « 8.10. » (de), « 10/8 » (en-US). */
+    fun dayMonth(context: Context, date: LocalDate): String =
+        localized(context, "Md", date.atStartOfDay(ZoneId.systemDefault()))
+
+    /**
+     * Met en forme avec un « squelette » ICU (les champs voulus, sans ordre ni séparateurs) :
+     * Android en tire le motif de la langue affichée (celle des textes du widget).
+     */
+    private fun localized(context: Context, skeleton: String, dateTime: ZonedDateTime): String {
+        val locale = context.resources.configuration.locales[0]
+        val pattern = DateFormat.getBestDateTimePattern(locale, skeleton)
+        return SimpleDateFormat(pattern, locale).format(Date.from(dateTime.toInstant()))
+    }
 
     /** Prix Tempo : « 16.12 c/kWh » */
     fun tempoPrice(cents: Double): String = String.format(Locale.ROOT, "%.2f c/kWh", cents)

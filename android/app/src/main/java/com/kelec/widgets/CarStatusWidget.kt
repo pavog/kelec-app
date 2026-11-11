@@ -225,7 +225,7 @@ private fun ChargingTimes(battery: BatteryStatus, fontSize: Int) {
                 colorFilter = ColorFilter.tint(WidgetColors.secondary),
             )
             Text(
-                text = Formatting.localTime(endTime),
+                text = Formatting.localTime(LocalContext.current, endTime),
                 style = TextStyle(color = WidgetColors.secondary, fontSize = fontSize.sp),
             )
         }
