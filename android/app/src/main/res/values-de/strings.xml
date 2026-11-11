@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kelec</string>
-    <string name="app_widget_description">Regroupe les informations de votre Renault E-Tech sur votre écran d\'accueil</string>
+    <string name="app_widget_description">Führt Informationen von deinem Renault E-Tech auf deinem Startbildschirm zusammen</string>
     <string name="widget_image_description">Car logo manufacturer</string>
     <string name="widget_time_remaining_image_description">Remaining time image</string>
     <string name="widget_end_time_image_description">End time image</string>
