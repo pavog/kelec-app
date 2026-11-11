@@ -20,24 +20,24 @@ object Formatting {
         null
     }
 
-    /** Heure dans le fuseau du téléphone, au format de l'appareil : « 14:05 », ou « 2:05 PM » si le réglage est sur 12 h. */
+    /** Time in the phone's time zone, in the device format: "14:05", or "2:05 PM" when the device is set to 12 h. */
     fun localTime(context: Context, dateTime: ZonedDateTime): String =
         localized(context, if (DateFormat.is24HourFormat(context)) "Hm" else "hm", dateTime)
 
-    /** Heure de la dernière mise à jour, précédée de la date (« 07/10 14:05 », « 7.10. 14:05 »…) si ce n'est pas aujourd'hui. */
+    /** Time of the last refresh, preceded by the date ("07/10 14:05", "7.10. 14:05"…) when it is not today. */
     fun lastRefresh(context: Context, dateTime: ZonedDateTime, today: LocalDate = LocalDate.now()): String {
         val local = dateTime.withZoneSameInstant(ZoneId.systemDefault())
         return if (local.toLocalDate() == today) localTime(context, local)
         else "${dayMonth(context, local.toLocalDate())} ${localTime(context, local)}"
     }
 
-    /** Jour et mois, sans l'année, dans l'ordre et avec les séparateurs de la langue : « 08/10 » (fr), « 8.10. » (de), « 10/8 » (en-US). */
+    /** Day and month, without the year, in the locale's order and separators: "08/10" (fr), "8.10." (de), "10/8" (en-US). */
     fun dayMonth(context: Context, date: LocalDate): String =
         localized(context, "Md", date.atStartOfDay(ZoneId.systemDefault()))
 
     /**
-     * Met en forme avec un « squelette » ICU (les champs voulus, sans ordre ni séparateurs) :
-     * Android en tire le motif de la langue affichée (celle des textes du widget).
+     * Formats with an ICU "skeleton" (the wanted fields, without order or separators):
+     * Android derives the pattern of the displayed language (the one of the widget texts).
      */
     private fun localized(context: Context, skeleton: String, dateTime: ZonedDateTime): String {
         val locale = context.resources.configuration.locales[0]
